@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Find a Doctor</title>
+    <link rel="stylesheet"  type="text/css" href="/styles.css" />
+</head>
+<body>
+    <nav>
+        <a href="/">Home</a> | <a href="/users/login">Login</a>
+    </nav>
+
+    <h1>Find a Specialist</h1>
+
+    <form action="/doctors/search" method="GET">
+        <input type="text" name="q" placeholder="Search by name or email" value="<%= query || '' %>">
+        <button type="submit">Search</button>
+    </form>
+
+    <hr>
+
+    <% if (results && results.length > 0) { %>
+        <h2>Results:</h2>
+        <ul>
+            <% results.forEach(doc => { %>
+                <li>
+                    <strong><%= doc.name %></strong>
+                    <br>
+                    <small><%= doc.email %></small>
+                </li>
+            <% }) %>
+        </ul>
+    <% } else if (query) { %>
+        <p>No doctors found matching "<%= query %>".</p>
+    <% } %>
+</body>
+</html>

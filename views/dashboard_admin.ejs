@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<head>
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" type="text/css" href="/styles.css" />
+    <style>
+        input.edit-input {
+            border: 1px solid #ccc;
+            padding: 5px;
+            width: 120px;
+        }
+        .filter-bar { background: #eee; padding: 15px; margin-bottom: 20px; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Admin Control Panel</h1>
+        <a href="/users/logout">Logout</a>
+    </div>
+
+    <div class="filter-bar">
+        <form action="/admin/dashboard" method="GET">
+            <label><strong>Filter Records:</strong></label>
+            <input type="text" name="search" placeholder="Search Name..." value="<%= search %>">
+            <button type="submit">Search</button>
+            <a href="/admin/dashboard"><button type="button">Reset</button></a>
+        </form>
+    </div>
+
+    <h2>Pending Doctor Requests</h2>
+    <table border="1" cellpadding="10">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% if (pending.length > 0) { %>
+                <% pending.forEach(function(reqUser) { %>
+                <tr>
+                    <td><%= reqUser.first_name %> <%= reqUser.last_name %></td>
+                    <td><%= reqUser.email %></td>
+                    <td>
+                        <form action="/admin/approve-doctor" method="POST" style="display:inline;">
+                            <input type="hidden" name="user_id" value="<%= reqUser.id %>">
+                            <button type="submit" style="color:green">Approve</button>
+                        </form>
+                        <form action="/admin/reject-doctor" method="POST" style="display:inline;">
+                            <input type="hidden" name="user_id" value="<%= reqUser.id %>">
+                            <button type="submit" style="color:red">Reject</button>
+                        </form>
+                    </td>
+                </tr>
+                <% }); %>
+            <% } else { %>
+                <tr><td colspan="3">No pending requests.</td></tr>
+            <% } %>
+        </tbody>
+    </table>
+
+    <hr>
+
+    <h2>Manage Patients</h2>
+    <table border="1" cellpadding="5">
+        <thead>
+            <tr>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Email</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% if (patients.length > 0) { %>
+                <% patients.forEach(function(p) { %>
+                <tr>
+                    <form action="/admin/update-user" method="POST">
+                        <input type="hidden" name="user_id" value="<%= p.id %>">
+                        <td><input type="text" name="first_name" value="<%= p.first_name %>" class="edit-input"></td>
+                        <td><input type="text" name="last_name" value="<%= p.last_name %>" class="edit-input"></td>
+                        <td><input type="email" name="email" value="<%= p.email %>" class="edit-input"></td>
+                        <td>
+                            <button type="submit" style="color:blue">Update</button>
+                            <button type="submit" formaction="/admin/delete-user" onclick="return confirm('Delete user?')" style="color:red">Delete</button>
+                        </td>
+                    </form>
+                </tr>
+                <% }); %>
+            <% } else { %>
+                <tr><td colspan="4">No patients found.</td></tr>
+            <% } %>
+        </tbody>
+    </table>
+
+    <hr>
+
+    <h2>Manage Doctors</h2>
+    <table border="1" cellpadding="5">
+        <thead>
+            <tr>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Email</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% if (doctors.length > 0) { %>
+                <% doctors.forEach(function(d) { %>
+                <tr>
+                    <form action="/admin/update-user" method="POST">
+                        <input type="hidden" name="user_id" value="<%= d.id %>">
+                        <td><input type="text" name="first_name" value="<%= d.first_name %>" class="edit-input"></td>
+                        <td><input type="text" name="last_name" value="<%= d.last_name %>" class="edit-input"></td>
+                        <td><input type="email" name="email" value="<%= d.email %>" class="edit-input"></td>
+                        <td>
+                            <button type="submit" style="color:blue">Update</button>
+                            <button type="submit" formaction="/admin/delete-user" onclick="return confirm('Delete doctor?')" style="color:red">Delete</button>
+                        </td>
+                    </form>
+                </tr>
+                <% }); %>
+            <% } else { %>
+                <tr><td colspan="4">No doctors found.</td></tr>
+            <% } %>
+        </tbody>
+    </table>
+
+    <hr>
+
+    <h2>Manage Appointments</h2>
+    <table border="1" cellpadding="5">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Time</th>
+                <th>Patient</th>
+                <th>Doctor</th> 
+                <th>Reason</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% if (appointments.length > 0) { %>
+                <% appointments.forEach(function(app) { %>
+                <tr>
+                    <form action="/admin/update-appointment" method="POST">
+                        <input type="hidden" name="app_id" value="<%= app.id %>">
+                        
+                        <td><input type="date" name="date" value="<%= app.dateStr %>"></td>
+                        <td><input type="time" name="time" value="<%= app.timeStr %>"></td>
+                        
+                        <td style="background:#f0f0f0;">
+                            <%= app.patient_first %> <%= app.patient_last %>
+                        </td>
+
+                        <td style="background:#e6f7ff;">
+                            Dr. <%= app.doctor_first %> <%= app.doctor_last %>
+                        </td>
+                        
+                        <td><input type="text" name="reason" value="<%= app.reason %>" style="width:100px;"></td>
+                        
+                        <td>
+                            <select name="status">
+                                <option value="pending" <%= app.status=='pending'?'selected':'' %>>Pending</option>
+                                <option value="approved" <%= app.status=='approved'?'selected':'' %>>Approved</option>
+                                <option value="completed" <%= app.status=='completed'?'selected':'' %>>Completed</option>
+                                <option value="cancelled" <%= app.status=='cancelled'?'selected':'' %>>Cancelled</option>
+                            </select>
+                        </td>
+                        <td>
+                            <button type="submit">Update</button>
+                        </td>
+                    </form>
+                </tr>
+                <% }); %>
+            <% } else { %>
+                <tr><td colspan="7">No appointments found.</td></tr>
+            <% } %>
+        </tbody>
+    </table>
+
+</body>
+</html>

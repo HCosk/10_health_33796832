@@ -3,7 +3,6 @@ const express = require("express");
 const router = express.Router();
 
 // Handle the main routes
-// Handle the main routes
 router.get("/", (req, res) => {
     res.render("index.ejs")
 }); 

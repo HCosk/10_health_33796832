@@ -1,26 +1,20 @@
-CREATE DATABASE IF NOT EXISTS health;
+DROP DATABASE IF EXISTS health;
+CREATE DATABASE health;
 USE health;
 
--- USERS TABLE (Patients)
 CREATE TABLE users (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(100) NOT NULL,
+    first_name VARCHAR(50) NOT NULL,
+    last_name VARCHAR(50) NOT NULL,
     email VARCHAR(150) NOT NULL UNIQUE,
-    phone VARCHAR(20),
+    phone_number VARCHAR(20),
+    age INT,
     password_hash VARCHAR(255) NOT NULL,
+    role ENUM('patient', 'doctor', 'admin') NOT NULL,
+    status ENUM('active', 'pending', 'rejected') DEFAULT 'active',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- DOCTORS TABLE
-CREATE TABLE doctors (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(100) NOT NULL,
-    specialty VARCHAR(100) NOT NULL,
-    bio TEXT,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
--- APPOINTMENTS TABLE
 CREATE TABLE appointments (
     id INT AUTO_INCREMENT PRIMARY KEY,
     patient_id INT NOT NULL,
@@ -28,14 +22,16 @@ CREATE TABLE appointments (
     appointment_datetime DATETIME NOT NULL,
     reason TEXT,
     status ENUM('pending', 'approved', 'cancelled', 'completed') 
-        NOT NULL DEFAULT 'pending',
+        DEFAULT 'pending',  
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-
     CONSTRAINT fk_patient
         FOREIGN KEY (patient_id) REFERENCES users(id)
         ON DELETE CASCADE ON UPDATE CASCADE,
-
     CONSTRAINT fk_doctor
-        FOREIGN KEY (doctor_id) REFERENCES doctors(id)
+        FOREIGN KEY (doctor_id) REFERENCES users(id)
         ON DELETE CASCADE ON UPDATE CASCADE
 );
+
+CREATE USER IF NOT EXISTS 'health_app'@'localhost' IDENTIFIED BY 'qwertyuiop';
+ALTER USER 'health_app'@'localhost' IDENTIFIED BY 'qwertyuiop';
+GRANT ALL PRIVILEGES ON health.* TO 'health_app'@'localhost';

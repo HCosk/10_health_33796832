@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<head>
+    <title>Patient Dashboard</title>
+    <link rel="stylesheet" href="/styles.css">
+    <style>
+        .booking-container {
+            background-color: #f9f9f9;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            max-width: 600px;
+        }
+        
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #f2f2f2; }
+        
+        .status-pending { color: orange; font-weight: bold; }
+        .status-completed { color: green; font-weight: bold; }
+        .status-cancelled { color: red; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Welcome, <%= patientName %></h1>
+        <a href="/users/logout">Logout</a>
+    </div>
+
+    <h2>Book an Appointment</h2>
+    <p>Fill out the form below to schedule a consultation.</p>
+
+    <div class="booking-container">
+        <form action="/appointments/book" method="POST">
+            
+            <label><strong>Select Doctor:</strong></label><br>
+            <select name="doctor_id" required style="width: 100%; padding: 8px; margin-bottom: 15px;">
+                <option value="" disabled selected>-- Choose a Doctor --</option>
+                <% if (doctors.length > 0) { %>
+                    <% doctors.forEach(function(doctor) { %>
+                        <option value="<%= doctor.id %>">
+                            Dr. <%= doctor.first_name %> <%= doctor.last_name %> (<%= doctor.email %>)
+                        </option>
+                    <% }); %>
+                <% } else { %>
+                    <option disabled>No doctors available</option>
+                <% } %>
+            </select>
+            
+            <label><strong>Date:</strong></label>
+            <input type="date" name="date" required>
+            
+            <label style="margin-left: 20px;"><strong>Time:</strong></label>
+            <input type="time" name="time" required>
+            
+            <br><br>
+            
+            <label><strong>Reason / Notes:</strong></label><br>
+            <textarea name="reason" rows="3" style="width: 100%;" required placeholder="Describe your symptoms..."></textarea>
+            
+            <br><br>
+            <button type="submit" style="padding: 10px 20px; cursor: pointer;">Book Appointment</button>
+        </form>
+    </div>
+
+    <hr style="margin: 40px 0;">
+
+    <h2>My Appointments</h2>
+
+    <% if (appointments && appointments.length > 0) { %>
+        <table>
+            <thead>
+                <tr>
+                    <th>Date & Time</th>
+                    <th>Doctor</th>
+                    <th>Reason</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% appointments.forEach(function(app) { %>
+                    <tr>
+                        <td><%= new Date(app.appointment_datetime).toLocaleString() %></td>
+                        <td>Dr. <%= app.doc_first %> <%= app.doc_last %></td>
+                        <td><%= app.reason %></td>
+                        <td>
+                            <span class="status-<%= app.status %>">
+                                <%= app.status.toUpperCase() %>
+                            </span>
+                        </td>
+                    </tr>
+                <% }); %>
+            </tbody>
+        </table>
+    <% } else { %>
+        <p>You have no upcoming or past appointments.</p>
+    <% } %>
+
+</body>
+</html>

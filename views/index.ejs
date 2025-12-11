@@ -1,15 +1,24 @@
-<!doctype html>
+<!DOCTYPE html>
 <html>
-  <head>
-    <title> The Thirsty Student</title>
-  </head>
-  <body>
-    <h1>Welcome to The Thirsty Student Shop</h1>
-    <h2>Here are some things that we sell:</h2>
-    <ul>
-      <li>Beer</li>
-      <li>Wine</li>
-      <li>Soft Drinks</li>
-    </ul>
-    </body>
+<head>
+    <title> <%=Data.Name%> - Home</title>
+    <link rel="stylesheet"  type="text/css" href="/styles.css" />
+</head>
+<body>
+    <nav>
+        <a href="/">Home</a> | 
+        <a href="/about">About</a> | 
+        <a href="/doctors/search">Find a Doctor</a> | 
+        <a href="/users/login">Login</a> | 
+        <a href="/users/register">Register</a>
+    </nav>
+
+    <h1>Welcome to Better Health Clinic</h1>
+    <p>Connect with top specialists and manage your health journey.</p>
+    
+    <div class="actions">
+        <a href="/users/register"><button>Get Started</button></a>
+        <a href="/users/login"><button>Login</button></a>
+    </div>
+</body>
 </html>

@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<head>
+    <title>Doctor Dashboard</title>
+    <link rel="stylesheet" type="text/css" href="/styles.css" />
+    <style>
+        .status-pending { color: orange; font-weight: bold; }
+        .status-approved { color: green; font-weight: bold; }
+        .status-cancelled { color: red; }
+        .status-completed { color: blue; }
+        
+        .filter-section { background: #f4f4f4; padding: 15px; margin-bottom: 20px; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Welcome, Dr. <%= doctorName %></h1>
+        <a href="/users/logout">Logout</a>
+    </div>
+
+    <div class="filter-section">
+        <form action="/doctors/dashboard" method="GET">
+            <label>Filter by Date:</label>
+            <input type="date" name="date" value="<%= query.date || '' %>">
+
+            <label>Patient Name:</label>
+            <input type="text" name="search" placeholder="Enter name..." value="<%= query.search || '' %>">
+
+            <button type="submit">Filter</button>
+            <a href="/doctors/dashboard"><button type="button">Clear Filters</button></a>
+        </form>
+    </div>
+
+    <h2>Upcoming Appointments</h2>
+    <table border="1" cellpadding="10" width="100%">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Time</th>
+                <th>Patient</th>
+                <th>Reason</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% if (upcoming.length > 0) { %>
+                <% upcoming.forEach(function(app) { %>
+                <tr>
+                    <td><%= app.dateStr %></td>
+                    <td><%= app.timeStr %></td>
+                    <td><%= app.first_name %> <%= app.last_name %></td>
+                    <td><%= app.reason %></td>
+                    <td class="status-<%= app.status %>"><%= app.status.toUpperCase() %></td>
+                    <td>
+                        <!-- Action Buttons Form -->
+                            <form action="/doctors/appointment/update" method="POST" style="display:inline;">
+                            <input type="hidden" name="appointment_id" value="<%= app.id %>">
+                            
+                            <% if (app.status === 'pending') { %>
+                                <button name="new_status" value="approved" style="color:green;">Approve</button>
+                                <button name="new_status" value="cancelled" style="color:red;">Cancel</button>
+                            <% } else if (app.status === 'approved') { %>
+                                <button name="new_status" value="completed" style="color:blue;">Mark Complete</button>
+                                <button name="new_status" value="cancelled" style="color:red;">Cancel</button>
+                            <% } %>
+                        </form>
+                    </td>
+                </tr>
+                <% }); %>
+            <% } else { %>
+                <tr><td colspan="6">No upcoming appointments found.</td></tr>
+            <% } %>
+        </tbody>
+    </table>
+
+    <hr>
+
+    <h2>Appointment History</h2>
+    <table border="1" cellpadding="10" width="100%" style="background-color: #f9f9f9; color: #555;">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Time</th>
+                <th>Patient</th>
+                <th>Reason</th>
+                <th>Final Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% if (past.length > 0) { %>
+                <% past.forEach(function(app) { %>
+                <tr>
+                    <td><%= app.dateStr %></td>
+                    <td><%= app.timeStr %></td>
+                    <td><%= app.first_name %> <%= app.last_name %></td>
+                    <td><%= app.reason %></td>
+                    <td><%= app.status %></td>
+                </tr>
+                <% }); %>
+            <% } else { %>
+                <tr><td colspan="5">No past history found.</td></tr>
+            <% } %>
+        </tbody>
+    </table>
+
+</body>
+</html>
