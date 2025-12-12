@@ -46,7 +46,7 @@ router.post('/book', requireLogin, function(req, res, next) {
         if (err) return next(err);
 
 
-        res.redirect('/patient/dashboard');
+        res.redirect('../patient/dashboard');
     });
 });
 
