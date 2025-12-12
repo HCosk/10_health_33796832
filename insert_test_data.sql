@@ -73,7 +73,7 @@ VALUES
     'active'
 );
 
---indsert appointments
+-- insert appointments
 
 -- Appointment 1
 INSERT INTO appointments (patient_id, doctor_id, appointment_datetime, reason, status)

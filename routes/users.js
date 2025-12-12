@@ -82,16 +82,16 @@ router.post('/login', function (req, res, next) {
                 req.session.name = user.first_name;
 
                 if (user.role === 'admin') {
-                    res.redirect('/admin/dashboard');
+                    res.redirect('../admin/dashboard');
                 } 
                 else if (user.role === 'doctor') {
-                    res.redirect('/doctors/dashboard'); 
+                    res.redirect('../doctors/dashboard'); 
                 } 
                 else if (user.role === 'patient'){
-                    res.redirect('/patient/dashboard'); 
+                    res.redirect('../patient/dashboard'); 
                 }
                 else {
-                    res.redirect('/'); 
+                    res.redirect('../'); 
                 }
                 
             } else {

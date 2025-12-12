@@ -1,0 +1,8 @@
+home=https://www.doc.gold.ac.uk/usr/273/
+about=https://www.doc.gold.ac.uk/usr/273/about
+searchDoctor=https://doc.gold.ac.uk/usr/273/doctors/search
+login=https://doc.gold.ac.uk/usr/273/users/login
+register=https://doc.gold.ac.uk/usr/273/users/register
+patientDashboard=https://doc.gold.ac.uk/usr/273/patient/dashboard
+adminDashboard=https://doc.gold.ac.uk/usr/273/admin/dashboard
+doctorDashboard=https://doc.gold.ac.uk/usr/273/doctors/dashboard
