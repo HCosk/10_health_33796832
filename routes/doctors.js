@@ -107,7 +107,7 @@ router.post('/appointment/update', function(req, res, next) {
     db.query(sql, [new_status, appointment_id], function(err, result) {
         if (err) return next(err);
         
-        res.redirect('../doctors/dashboard');
+        res.redirect('../../doctors/dashboard');
     });
 });
 
