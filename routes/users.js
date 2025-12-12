@@ -41,7 +41,7 @@ router.post('/register', function(req, res, next) {
                 return next(err);
             }
 
-            res.redirect('/users/login');
+            res.redirect('../users/login');
         });
     });
 });
